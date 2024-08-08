@@ -1,0 +1,75 @@
+.responses-container {
+    padding: 20px;
+  }
+  
+  .responses-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  
+  .responses-table th, .responses-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .responses-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .responses-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .clear-responses-button, .save-report-link {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .clear-responses-button:hover, .save-report-link:hover {
+    background-color: #45a049;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+  }
+  
+  .modal button {
+    /* margin: 10px; */
+    padding: 10px 20px;
+  }
+  
+  .confirm-button {
+    background-color: red;
+    color: white;
+    border: none;
+  }
+  
+  .cancel-button {
+    background-color: gray;
+    color: white;
+    border: none;
+  }
+  

@@ -1,0 +1,73 @@
+.question-management-container {
+    padding: 20px;
+  }
+  
+  .question-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .create-question-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .create-question-button:hover {
+    background-color: #45a049;
+  }
+  
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal button {
+    margin-bottom: 10px;
+  }
+  
+  .search-bar {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .question-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .question-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  
+  .question-actions button {
+    margin-left: 10px;
+  }
+  

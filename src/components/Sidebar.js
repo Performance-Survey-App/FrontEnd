@@ -9,23 +9,22 @@ const Sidebar = () => {
       <nav>
         <ul>
           <li>
-            <i class="fa fa-home" aria-hidden="true"></i>
             <NavLink to="/admin" activeClassName="active">Home</NavLink>
           </li>
           <li>
-            <NavLink to="./user-management" activeClassName="active">User Management</NavLink>
+            <NavLink to="./user-management" activeClassName="active">Manage User</NavLink>
           </li>
           <li>
-            <NavLink to="./department-management" activeClassName="active">Department Management</NavLink>
+            <NavLink to="./department-management" activeClassName="active">Manage Department</NavLink>
           </li>
           <li>
-            <NavLink to="./question-management" activeClassName="active">Question Management</NavLink>
+            <NavLink to="./question-management" activeClassName="active">Manage Questions</NavLink>
           </li>
           <li>
             <NavLink to="./assign-questions" activeClassName="active">Assign Questions</NavLink>
           </li>
           <li>
-            <NavLink to="./responses" activeClassName="active">Responses</NavLink>
+            <NavLink to="./responses" activeClassName="active">Response</NavLink>
           </li>
         </ul>
       </nav>
