@@ -1,0 +1,17 @@
+/* AdminPage.css */
+.admin-container {
+    display: flex;
+    height: 100vh;
+    color: black;
+    background-color: white;
+  }
+  
+  .content {
+    margin-left: 300px;
+    padding: 20px;
+    flex-grow: 1;
+  }
+h2{
+  color: black;
+}
+  
