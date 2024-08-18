@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import '../styles/DepartmentManagement.css';
+import { Box, Typography, Button, TextField, List, ListItem, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const DepartmentManagement = () => {
   const [departments, setDepartments] = useState([]);
@@ -7,6 +10,8 @@ const DepartmentManagement = () => {
   const [updateDepartment, setUpdateDepartment] = useState({ id: '', name: '' });
   const [isCreateDepartmentOpen, setIsCreateDepartmentOpen] = useState(false);
   const [isUpdateDepartmentOpen, setIsUpdateDepartmentOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const [departmentToDelete, setDepartmentToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const createDepartment = () => {
@@ -24,9 +29,16 @@ const DepartmentManagement = () => {
     setIsUpdateDepartmentOpen(false);
   };
 
-  const deleteDepartment = id => {
-    const filteredDepartments = departments.filter(department => department.id !== id);
+  const confirmDeleteDepartment = id => {
+    setDepartmentToDelete(id);
+    setIsDeleteConfirmOpen(true);
+  };
+
+  const deleteDepartment = () => {
+    const filteredDepartments = departments.filter(department => department.id !== departmentToDelete);
     setDepartments(filteredDepartments);
+    setIsDeleteConfirmOpen(false);
+    setDepartmentToDelete(null);
   };
 
   const filteredDepartments = departments.filter(department =>
@@ -34,84 +46,131 @@ const DepartmentManagement = () => {
   );
 
   return (
-    <div className="department-management-container">
-      <div className="department-management-header">
-        <h3>Departments</h3>
-        <button 
-          className="create-department-button"
+    <Box sx={{ p: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <Typography variant="h4">Departments</Typography>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          startIcon={<AddIcon />} 
           onClick={() => setIsCreateDepartmentOpen(true)}
         >
           Create Department
-        </button>
-      </div>
+        </Button>
+      </Box>
 
-      {isCreateDepartmentOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h4>Create Department</h4>
-            <input
-              type="text"
-              placeholder="Enter Department Name"
-              value={newDepartment}
-              onChange={(e) => setNewDepartment(e.target.value)}
-            />
-            <button onClick={createDepartment}>Save</button>
-            <button onClick={() => setIsCreateDepartmentOpen(false)}>Cancel</button>
-          </div>
-        </div>
-      )}
+      {/* Create Department Dialog */}
+      <Dialog open={isCreateDepartmentOpen} onClose={() => setIsCreateDepartmentOpen(false)}>
+        <DialogTitle>Create Department</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Department Name"
+            type="text"
+            fullWidth
+            value={newDepartment}
+            onChange={(e) => setNewDepartment(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsCreateDepartmentOpen(false)}>Cancel</Button>
+          <Button onClick={createDepartment} color="primary">Save</Button>
+        </DialogActions>
+      </Dialog>
 
-      {isUpdateDepartmentOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h4>Update Department</h4>
-            <input
-              type="text"
-              placeholder="Department Name"
-              value={updateDepartment.name}
-              onChange={(e) => setUpdateDepartment({ ...updateDepartment, name: e.target.value })}
-            />
-            <button onClick={updateDepartmentDetails}>Save</button>
-            <button onClick={() => setIsUpdateDepartmentOpen(false)}>Cancel</button>
-            <button 
-              className="delete" 
-              onClick={() => deleteDepartment(updateDepartment.id)}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Update Department Dialog */}
+      <Dialog open={isUpdateDepartmentOpen} onClose={() => setIsUpdateDepartmentOpen(false)}>
+        <DialogTitle>Update Department</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Department Name"
+            type="text"
+            fullWidth
+            value={updateDepartment.name}
+            onChange={(e) => setUpdateDepartment({ ...updateDepartment, name: e.target.value })}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsUpdateDepartmentOpen(false)}>Cancel</Button>
+          <Button onClick={updateDepartmentDetails} color="primary">Save</Button>
+          <Button 
+            onClick={() => confirmDeleteDepartment(updateDepartment.id)} 
+            color="error"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-      <input 
-        className="search-bar"
-        type="text" 
-        placeholder="Search by name..." 
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+      >
+        <DialogTitle>{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this department? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsDeleteConfirmOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={deleteDepartment} color="secondary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Search Bar */}
+      <TextField
+        fullWidth
+        margin="dense"
+        label="Search by name..."
+        type="text"
+        variant="outlined"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      <ul className="department-list">
+      {/* Department List */}
+      <List>
         {filteredDepartments.map(department => (
-          <li key={department.id} className="department-list-item">
-            <div className="department-info">
-              <strong>{department.name}</strong>
-            </div>
-            <div className="department-actions">
-              <button 
-                className="update" 
-                onClick={() => {
-                  setUpdateDepartment(department);
-                  setIsUpdateDepartmentOpen(true);
-                }}
-              >
-                Update
-              </button>
-            </div>
-          </li>
+          <ListItem
+            key={department.id}
+            secondaryAction={
+              <Box sx={{ display: 'flex' }}>
+                <IconButton
+                  edge="end"
+                  aria-label="edit"
+                  onClick={() => {
+                    setUpdateDepartment(department);
+                    setIsUpdateDepartmentOpen(true);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  onClick={() => confirmDeleteDepartment(department.id)}
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
+            }
+          >
+            <Typography variant="body1" sx={{ flexGrow: 1 }}>
+              {department.name}
+            </Typography>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
   );
 };
 

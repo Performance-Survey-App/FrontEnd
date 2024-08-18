@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-do
 import LoginPage from './components/LoginPage';
 import AdminPage from './components/AdminPage';
 import UserPage from './components/UserPage';
+import ChangePassword from './components/ChangePassword';
 // Import any other components if needed
 
 const App = () => {
@@ -21,6 +22,7 @@ const App = () => {
         {/* Default route */}
         <Route path="/" element={<Navigate to="/login" />} />
         {/* Handle unmatched routes */}
+        <Route path="/change-password" element={<ChangePassword />} />
         <Route path="*" element={<h1>404 Page Not Found</h1>} />
       </Routes>
     </Router>

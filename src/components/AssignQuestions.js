@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import '../styles/AssignQuestions.css';
+import { Box, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
 const sendEmail = (name, email) => {
-  console.log(`Sending email to ${email} for ${name}`);
+  alert(`Sending email to ${email} for ${name}`);
 };
 
 const AssignQuestions = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [department, setDepartment] = useState('');
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
 
   const handleSubmit = () => {
@@ -16,39 +17,65 @@ const AssignQuestions = () => {
   };
 
   return (
-    <div className="assign-questions-container">
-      <div className="assign-questions-header">
-        <h2>Assign Questions</h2>
-        <button 
-          className="assign-questions-button"
+    <Box sx={{ p: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <Typography variant="h4">Assign Questions</Typography>
+        <Button 
+          variant="contained" 
+          color="primary"
           onClick={() => setIsAssignModalOpen(true)}
         >
           Assign Questions
-        </button>
-      </div>
+        </Button>
+      </Box>
 
-      {isAssignModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h4>Assign Questions</h4>
-            <input
-              type="text"
-              placeholder="Enter Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <input
-              type="email"
-              placeholder="Enter Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <button onClick={handleSubmit}>Send Email</button>
-            <button onClick={() => setIsAssignModalOpen(false)}>Cancel</button>
-          </div>
-        </div>
-      )}
-    </div>
+      {/* Assign Questions Dialog */}
+      <Dialog open={isAssignModalOpen} onClose={() => setIsAssignModalOpen(false)}>
+        <DialogTitle>Assign Questions</DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            margin="dense"
+            label="Enter Name"
+            value={name}
+            variant="outlined"
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            margin="dense"
+            label="Enter Department"
+            value={department}
+            variant="outlined"
+            onChange={(e) => setDepartment(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            margin="dense"
+            label="Enter Email"
+            value={email}
+            variant="outlined"
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button 
+            onClick={handleSubmit} 
+            variant="contained" 
+            color="primary"
+          >
+            Send Email
+          </Button>
+          <Button 
+            onClick={() => setIsAssignModalOpen(false)} 
+            variant="contained" 
+            color="secondary"
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 };
 

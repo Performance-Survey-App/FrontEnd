@@ -5,8 +5,14 @@
     position: fixed;
     left: 0;
     top: 0;
-    background: rgb(112, 240, 163);
-    color: #fff;
+    background: white;
+    color: #0c0303;
+        box-shadow: 
+        3px 3px 5px rgba(123, 127, 124, 0.2),  /* First shadow */
+        -3px -3px 5px rgba(123, 127, 124, 0.2), /* Second shadow */
+        5px 5px 15px rgba(123, 127, 124, 0.1), /* Third shadow */
+        inset 0px 0px 10px rgba(123, 127, 124, 0.1);
+
   }
   
   .sidebar nav ul {
@@ -21,14 +27,15 @@
   }
   
   .sidebar nav ul li a {
-    color: #500505;
-    text-align: left;
+    color: rgb(96, 94, 94);
+    /* color: #131212; */
+    text-align: right;
     text-decoration: none;
     /* text-decoration: underline; */
     font-weight: 700;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 23px;
-    font-style: italic;
+    /* font-style: italic; */
     display: block;
   }
   
@@ -41,4 +48,32 @@
   }
   .logo{
     background-image: url();
+  }
+  .logo{
+    display: flex;
+    margin: 0;
+    background-color: white;
+    /* border: 2px solid red; */
+    box-shadow: 
+    3px 3px 5px rgba(123, 127, 124, 0.2),  /* First shadow */
+    -3px -3px 5px rgba(123, 127, 124, 0.2), /* Second shadow */
+    5px 5px 15px rgba(123, 127, 124, 0.1), /* Third shadow */
+    inset 0px 0px 10px rgba(123, 127, 124, 0.1);
+    border-radius: 0px 0px 90px 0px;
+  }
+  .Logo{
+    background-image: url('../images/logo.jpg');
+    width: 50px;
+    display: flexbox;
+    height: 50px;
+    /* margin-left: 5px; */
+    margin-top: 5px;
+    margin-right: 5px;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .txt{
+    font-size: 20px;
+    color: rgb(62, 58, 58);
+    font-weight: 800;
   }

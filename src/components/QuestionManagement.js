@@ -1,5 +1,23 @@
 import React, { useState } from 'react';
-import '../styles/QuestionManagement.css';
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Modal,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const QuestionManagement = () => {
   const [departments, setDepartments] = useState([]);
@@ -40,111 +58,176 @@ const QuestionManagement = () => {
   );
 
   return (
-    <div className="question-management-container">
-      <div className="question-management-header">
-        <h3>Department Questions</h3>
-        <button 
-          className="create-question-button"
+    <Box sx={{ p: { xs: 2, sm: 3 } }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h5">Department Questions</Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
           onClick={() => setIsCreateQuestionOpen(true)}
         >
           Create Question
-        </button>
-      </div>
+        </Button>
+      </Box>
 
-      {isCreateQuestionOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h4>Create Question</h4>
-            <select onChange={(e) => setSelectedDepartment(e.target.value)}>
-              <option value="">Select Department</option>
-              {departments.map(department => (
-                <option key={department.id} value={department.id}>{department.name}</option>
-              ))}
-            </select>
-            <select onChange={(e) => setQuestionType(e.target.value)}>
-              <option value="Text">Text Question</option>
-              <option value="MultipleChoice">Multiple Choice</option>
-            </select>
-            {questionType && (
-              <div>
-                <input
-                  type="text"
-                  placeholder="Enter Question"
-                  value={newQuestion.text}
-                  onChange={(e) => setNewQuestion({ ...newQuestion, text: e.target.value, type: questionType })}
-                />
-                {questionType === 'MultipleChoice' && (
-                  <div>
-                    <p>Choices: Very Poor, Poor, Very Good, Excellent</p>
-                    <input
-                      type="hidden"
-                      value={['Very Poor', 'Poor', 'Very Good', 'Excellent']}
-                      onChange={() => setNewQuestion({ ...newQuestion, choices: ['Very Poor', 'Poor', 'Very Good', 'Excellent'] })}
-                    />
-                  </div>
-                )}
-                <button onClick={createQuestion}>Save Question</button>
-                <button onClick={() => setIsCreateQuestionOpen(false)}>Cancel</button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {isUpdateQuestionOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h4>Update Question</h4>
-            <input
-              type="text"
-              placeholder="Update Question"
-              value={updateQuestionData.text}
-              onChange={(e) => setUpdateQuestionData({ ...updateQuestionData, text: e.target.value })}
-            />
-            <button onClick={updateQuestionDetails}>Save Changes</button>
-            <button onClick={() => setIsUpdateQuestionOpen(false)}>Cancel</button>
-            <button onClick={() => deleteQuestion(updateQuestionData.id)}>Delete</button>
-          </div>
-        </div>
-      )}
-
-      <input 
-        className="search-bar"
-        type="text" 
-        placeholder="Search questions by text..." 
+      <TextField
+        fullWidth
+        variant="outlined"
+        placeholder="Search questions by text..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        sx={{ mb: 2 }}
       />
 
-      <ul className="question-list">
+      <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
+        <InputLabel>Department</InputLabel>
+        <Select
+          value={selectedDepartment}
+          onChange={(e) => setSelectedDepartment(e.target.value)}
+          label="Department"
+        >
+          <MenuItem value="">
+            <em>Select Department</em>
+          </MenuItem>
+          {departments.map(department => (
+            <MenuItem key={department.id} value={department.id}>
+              {department.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <List>
         {filteredQuestions
           .filter(question => question.department === selectedDepartment)
           .map(question => (
-            <li key={question.id} className="question-list-item">
-              <div className="question-info">
-                <strong>{question.text}</strong> ({question.type})
-              </div>
-              <div className="question-actions">
-                <button 
-                  className="update" 
+            <ListItem key={question.id}>
+              <ListItemText primary={question.text} secondary={`Type: ${question.type}`} />
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  aria-label="edit"
                   onClick={() => {
                     setUpdateQuestionData(question);
                     setIsUpdateQuestionOpen(true);
                   }}
                 >
-                  Update
-                </button>
-                <button 
-                  className="delete" 
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
                   onClick={() => deleteQuestion(question.id)}
                 >
-                  Delete
-                </button>
-              </div>
-            </li>
+                  <DeleteIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
           ))}
-      </ul>
-    </div>
+      </List>
+
+      <Modal
+        open={isCreateQuestionOpen}
+        onClose={() => setIsCreateQuestionOpen(false)}
+        aria-labelledby="create-question-modal"
+        aria-describedby="create-question-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: { xs: '90%', sm: 400 },
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" id="create-question-modal">Create Question</Typography>
+          <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
+            <InputLabel>Department</InputLabel>
+            <Select
+              value={selectedDepartment}
+              onChange={(e) => setSelectedDepartment(e.target.value)}
+              label="Department"
+            >
+              {departments.map(department => (
+                <MenuItem key={department.id} value={department.id}>
+                  {department.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
+            <InputLabel>Question Type</InputLabel>
+            <Select
+              value={questionType}
+              onChange={(e) => setQuestionType(e.target.value)}
+              label="Question Type"
+            >
+              <MenuItem value="Text">Text Question</MenuItem>
+              <MenuItem value="MultipleChoice">Multiple Choice</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Enter Question"
+            value={newQuestion.text}
+            onChange={(e) => setNewQuestion({ ...newQuestion, text: e.target.value, type: questionType })}
+            sx={{ mb: 2 }}
+          />
+          {questionType === 'MultipleChoice' && (
+            <Box sx={{ mb: 2 }}>
+              <Typography>Choices: Very Poor, Poor, Very Good, Excellent</Typography>
+            </Box>
+          )}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button variant="contained" color="primary" onClick={createQuestion}>Save Question</Button>
+            <Button variant="outlined" color="secondary" onClick={() => setIsCreateQuestionOpen(false)}>Cancel</Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={isUpdateQuestionOpen}
+        onClose={() => setIsUpdateQuestionOpen(false)}
+        aria-labelledby="update-question-modal"
+        aria-describedby="update-question-modal-description"
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: { xs: '90%', sm: 400 },
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
+          <Typography variant="h6" id="update-question-modal">Update Question</Typography>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Update Question"
+            value={updateQuestionData.text}
+            onChange={(e) => setUpdateQuestionData({ ...updateQuestionData, text: e.target.value })}
+            sx={{ mb: 2 }}
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button variant="contained" color="primary" onClick={updateQuestionDetails}>Save Changes</Button>
+            <Button variant="outlined" color="secondary" onClick={() => setIsUpdateQuestionOpen(false)}>Cancel</Button>
+            <Button variant="contained" color="error" onClick={() => deleteQuestion(updateQuestionData.id)}>Delete</Button>
+          </Box>
+        </Box>
+      </Modal>
+    </Box>
   );
 };
 

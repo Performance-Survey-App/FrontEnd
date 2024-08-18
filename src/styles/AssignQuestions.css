@@ -32,16 +32,28 @@
     align-items: center;
   }
   
-  .modal {
+  .modall {
     background: white;
     padding: 20px;
+    display: inline;
     border-radius: 8px;
     width: 300px;
     text-align: center;
   }
-  
-  .modal button {
+  .modall TextField{
     margin: 2px;
     margin-bottom: 10px;
+  }
+  
+  .modall Button {
+    margin: 2px;
+    margin-bottom: 6px;
+    width: 300px;
+  }
+  .modall .text{
+    margin: 2px;
+    /* height: 100px; */
+    margin-bottom: 6px;
+    width: 300px;
   }
   

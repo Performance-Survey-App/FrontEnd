@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Container, Typography, Box, TextField, Button, IconButton, Menu, MenuItem } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
+import { useNavigate } from 'react-router-dom';
 
 // Mock function to simulate sending email
 const sendEmail = (email, message) => {
@@ -9,13 +12,35 @@ const UserPage = () => {
   const [pendingQuestions, setPendingQuestions] = useState([
     { id: 1, text: 'Question 1' },
     { id: 2, text: 'Question 2' },
-    { id: 3, text: 'Question 3' }
+    { id: 3, text: 'Question 3' },
   ]);
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [answer, setAnswer] = useState('');
   const [adminEmail, setAdminEmail] = useState('admin@example.com');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+
+  const handleSettingsClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    // Implement logout functionality here
+    navigate('/login'); // Redirect to login page
+    handleMenuClose();
+  };
+
+  const handleChangePassword = () => {
+    navigate('/change-password'); // Redirect to change password page
+    handleMenuClose();
+  };
 
   const handleSubmit = () => {
     setAnswers([...answers, { questionId: pendingQuestions[currentQuestion].id, answer }]);
@@ -29,35 +54,73 @@ const UserPage = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Questionnaire Page</h2>
+    <Container maxWidth="sm" sx={{ mt: 5 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h4" gutterBottom>
+          Questionnaire Page
+        </Typography>
+        <IconButton
+          aria-controls={open ? 'settings-menu' : undefined}
+          aria-haspopup="true"
+          onClick={handleSettingsClick}
+          color="inherit"
+        >
+          <SettingsIcon />
+        </IconButton>
+        <Menu
+          id="settings-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        </Menu>
+      </Box>
+
       {pendingQuestions.length > 0 ? (
-        <div>
-          <h3>You have pending questions:</h3>
-          <div>
-            <h4>{pendingQuestions[currentQuestion].text}</h4>
-            <input
-              type="text"
+        <Box>
+          <Typography variant="h6" gutterBottom>
+            You have pending questions:
+          </Typography>
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              {pendingQuestions[currentQuestion].text}
+            </Typography>
+            <TextField
+              fullWidth
+              variant="outlined"
               placeholder="Your Answer"
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
+              sx={{ mb: 2 }}
             />
-            <button onClick={handleSubmit}>Submit</button>
-          </div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+              sx={{ mb: 2 }}
+            >
+              Submit
+            </Button>
+          </Box>
           {currentQuestion < pendingQuestions.length - 1 && (
-            <div>
-              <button onClick={() => setCurrentQuestion(currentQuestion + 1)}>Answer Next Question</button>
-            </div>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => setCurrentQuestion(currentQuestion + 1)}
+            >
+              Answer Next Question
+            </Button>
           )}
-        </div>
+        </Box>
       ) : (
-        <h3>No Pending Questions</h3>
+        <Typography variant="h6">
+          No Pending Questions
+        </Typography>
       )}
-    </div>
+    </Container>
   );
 };
 
 export default UserPage;
-
- 
-
