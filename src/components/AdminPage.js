@@ -89,7 +89,7 @@ const AdminPage = () => {
               path="/"
               element={
                 <Box>
-                  <ImageSlider /> {/* Custom slideshow component */}
+                  {/* <ImageSlider /> Custom slideshow component */}
                 </Box>
               }
             />
