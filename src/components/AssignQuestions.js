@@ -1,80 +1,125 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { 
+  Box, Typography, Button, 
+  MenuItem, Select, InputLabel, 
+  FormControl, Snackbar, Alert 
+} from '@mui/material';
 
-const sendEmail = (name, email) => {
-  alert(`Sending email to ${email} for ${name}`);
-};
+const questionnaires = [
+  { id: 1, department: 'HR', title: 'Employee Satisfaction Survey' },
+  { id: 2, department: 'IT', title: 'Tech Skills Assessment' },
+  { id: 3, department: 'Sales', title: 'Sales Performance Review' },
+  // Add more questionnaires here
+];
 
 const AssignQuestions = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
   const [department, setDepartment] = useState('');
-  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [selectedQuestionnaire, setSelectedQuestionnaire] = useState('');
+  const [assignedTo, setAssignedTo] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleSubmit = () => {
-    sendEmail(name, email);
-    setIsAssignModalOpen(false);
+    // Logic to assign the questionnaire
+
+    // Open the Snackbar on successful action
+    setSnackbarOpen(true);
+
+    // Clear all previous selections
+    setDepartment('');
+    setSelectedQuestionnaire('');
+    setAssignedTo('');
+    setSelectedDepartment('');
   };
+
+  const filteredQuestionnaires = questionnaires.filter(q => q.department === department);
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h4">Assign Questions</Typography>
+      <Typography variant="h4" sx={{ mb: 2 }}>Assign Questions</Typography>
+
+      <FormControl fullWidth sx={{ mb: 2 }}>
+        <InputLabel>Department</InputLabel>
+        <Select
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+          variant="outlined"
+        >
+          <MenuItem value="HR">HR</MenuItem>
+          <MenuItem value="IT">IT</MenuItem>
+          <MenuItem value="Sales">Sales</MenuItem>
+          {/* Add more departments as needed */}
+        </Select>
+      </FormControl>
+
+      {department && (
+        <FormControl fullWidth sx={{ mb: 2 }}>
+          <InputLabel>Questionnaire</InputLabel>
+          <Select
+            value={selectedQuestionnaire}
+            onChange={(e) => setSelectedQuestionnaire(e.target.value)}
+            variant="outlined"
+          >
+            {filteredQuestionnaires.map(q => (
+              <MenuItem key={q.id} value={q.title}>
+                {q.title}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      )}
+
+      <Typography variant="h6" sx={{ mb: 2 }}>Assigned To:</Typography>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+        <FormControl fullWidth>
+          <InputLabel>User</InputLabel>
+          <Select
+            value={assignedTo}
+            onChange={(e) => setAssignedTo(e.target.value)}
+            variant="outlined"
+          >
+            {/* Replace these with dynamic user data */}
+            <MenuItem value="John Doe">John Doe</MenuItem>
+            <MenuItem value="Jane Smith">Jane Smith</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth>
+          <InputLabel>Department</InputLabel>
+          <Select
+            value={selectedDepartment}
+            onChange={(e) => setSelectedDepartment(e.target.value)}
+            variant="outlined"
+          >
+            {/* Replace these with dynamic department data */}
+            <MenuItem value="HR">HR</MenuItem>
+            <MenuItem value="IT">IT</MenuItem>
+            <MenuItem value="Sales">Sales</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
         <Button 
+          onClick={handleSubmit} 
           variant="contained" 
           color="primary"
-          onClick={() => setIsAssignModalOpen(true)}
         >
-          Assign Questions
+          Assign
         </Button>
       </Box>
 
-      {/* Assign Questions Dialog */}
-      <Dialog open={isAssignModalOpen} onClose={() => setIsAssignModalOpen(false)}>
-        <DialogTitle>Assign Questions</DialogTitle>
-        <DialogContent>
-          <TextField
-            fullWidth
-            margin="dense"
-            label="Enter Name"
-            value={name}
-            variant="outlined"
-            onChange={(e) => setName(e.target.value)}
-          />
-          <TextField
-            fullWidth
-            margin="dense"
-            label="Enter Department"
-            value={department}
-            variant="outlined"
-            onChange={(e) => setDepartment(e.target.value)}
-          />
-          <TextField
-            fullWidth
-            margin="dense"
-            label="Enter Email"
-            value={email}
-            variant="outlined"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button 
-            onClick={handleSubmit} 
-            variant="contained" 
-            color="primary"
-          >
-            Send Email
-          </Button>
-          <Button 
-            onClick={() => setIsAssignModalOpen(false)} 
-            variant="contained" 
-            color="secondary"
-          >
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="success">
+          Questionnaire assigned successfully!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

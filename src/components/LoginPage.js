@@ -15,7 +15,7 @@ const LoginPage = () => {
   
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = (e) => { 
     e.preventDefault();
 
     if (username === 'admin' && password === 'adminpass' && email === 'admin@jubileelifeng.com') {

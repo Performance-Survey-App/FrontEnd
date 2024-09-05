@@ -105,7 +105,7 @@ const Sidebar = () => {
       <Box
         sx={{
           width: 270,
-          bgcolor: 'primary.main',
+          bgcolor: 'green',
           height: '100vh',
           color: 'white',
           position: 'fixed',

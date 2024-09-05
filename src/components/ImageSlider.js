@@ -1,13 +1,14 @@
 // src/components/ImageSlider.js
 import React, { useState } from 'react';
 import { Box, Button, useTheme, useMediaQuery } from '@mui/material';
-import file5 from '../images/file5.jpg';
-import logo from '../images/logo.jpg';
+import image from '../images/1s.jpg';
+import log from '../images/2s.jpg';
+import logo from '../images/3s.jpg';
 
 const images = [
-  file5,
+  image,
+  log,
   logo,
-  file5,
   // Add more images as needed
 ];
 
@@ -31,6 +32,7 @@ const ImageSlider = () => {
   return (
     <Box 
       display="flex" 
+      
       flexDirection="column" 
       alignItems="center" 
       mt={4}

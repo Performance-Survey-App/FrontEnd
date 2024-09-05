@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography, Button, TextField, List, ListItem, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText } from '@mui/material';
+import { Box, Typography, Button, TextField, List, ListItem, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, Snackbar, Alert } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,10 +14,16 @@ const DepartmentManagement = () => {
   const [departmentToDelete, setDepartmentToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
+  // Snackbar state
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+
   const createDepartment = () => {
     setDepartments([...departments, { id: Date.now(), name: newDepartment }]);
     setNewDepartment('');
     setIsCreateDepartmentOpen(false);
+    setSnackbarMessage('Department created successfully!');
+    setSnackbarOpen(true);
   };
 
   const updateDepartmentDetails = () => {
@@ -27,6 +33,8 @@ const DepartmentManagement = () => {
     setDepartments(updatedDepartments);
     setUpdateDepartment({ id: '', name: '' });
     setIsUpdateDepartmentOpen(false);
+    setSnackbarMessage('Department updated successfully!');
+    setSnackbarOpen(true);
   };
 
   const confirmDeleteDepartment = id => {
@@ -39,6 +47,8 @@ const DepartmentManagement = () => {
     setDepartments(filteredDepartments);
     setIsDeleteConfirmOpen(false);
     setDepartmentToDelete(null);
+    setSnackbarMessage('Department deleted successfully!');
+    setSnackbarOpen(true);
   };
 
   const filteredDepartments = departments.filter(department =>
@@ -170,6 +180,17 @@ const DepartmentManagement = () => {
           </ListItem>
         ))}
       </List>
+
+      {/* Snackbar for notifications */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert onClose={() => setSnackbarOpen(false)} severity="success">
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
