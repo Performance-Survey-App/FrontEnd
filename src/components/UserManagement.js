@@ -172,8 +172,8 @@ const UserManagement = () => {
             transform: 'translate(-50%, -50%)',
             width: { xs: '90%', sm: 400 },
             bgcolor: 'background.paper',
-            border: '2px solid #000',
-            boxShadow: 24,
+            // border: '2px solid #000';
+            boxShadow: 20,
             p: 4,
           }}
         >
@@ -195,7 +195,7 @@ const UserManagement = () => {
             value={newUser.email}
             onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
           />
-          <TextField
+          {/* <TextField
             fullWidth
             margin="normal"
             label="Birthday"
@@ -204,7 +204,7 @@ const UserManagement = () => {
             variant="outlined"
             value={newUser.birthday}
             onChange={(e) => setNewUser({ ...newUser, birthday: e.target.value })}
-          />
+          /> */}
           <Select
             fullWidth
             margin="normal"
@@ -219,7 +219,7 @@ const UserManagement = () => {
               <MenuItem key={dept} value={dept}>{dept}</MenuItem>
             ))}
           </Select>
-          <TextField
+          {/* <TextField
             fullWidth
             margin="normal"
             label="Default Password"
@@ -227,7 +227,7 @@ const UserManagement = () => {
             variant="outlined"
             value={newUser.password}
             onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-          />
+          /> */}
           <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
             <Button onClick={createUser} variant="contained">Save</Button>
             <Button onClick={() => setIsCreateUserOpen(false)} variant="outlined">Cancel</Button>

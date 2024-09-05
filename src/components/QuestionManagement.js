@@ -145,7 +145,7 @@ const QuestionnaireManagement = () => {
           onChange={(e) => setNewQuestionnaire({ ...newQuestionnaire, title: e.target.value })}
           sx={{ mb: 2 }}
         />
-
+{/* 
         <TextField
           fullWidth
           variant="outlined"
@@ -155,7 +155,7 @@ const QuestionnaireManagement = () => {
           value={newQuestionnaire.description}
           onChange={(e) => setNewQuestionnaire({ ...newQuestionnaire, description: e.target.value })}
           sx={{ mb: 2 }}
-        />
+        /> */}
 
         <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
           <InputLabel>Department</InputLabel>
