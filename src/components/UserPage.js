@@ -9,7 +9,12 @@ import {
   Menu,
   MenuItem,
   Snackbar,
-  Alert
+  Alert,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton
 } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useNavigate } from 'react-router-dom';
@@ -97,68 +102,98 @@ const UserPage = () => {
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 5, position: 'relative' }}>
-      <IconButton
-        aria-controls={open ? 'settings-menu' : undefined}
-        aria-haspopup="true"
-        onClick={handleSettingsClick}
-        color="inherit"
-        sx={{ position: 'absolute', top: 0, right: 0 }}
+    <Container maxWidth="lg" sx={{ mt: 5, display: 'flex' }}>
+      {/* Sidebar Drawer */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: 240,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: 240,
+            boxSizing: 'border-box',
+          },
+        }}
       >
-        <SettingsIcon />
-      </IconButton>
-      <Menu
-        id="settings-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleMenuClose}
-      >
-        <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
-        <MenuItem onClick={handleLogout}>Logout</MenuItem>
-      </Menu>
+        <List>
+          {pendingQuestionnaires.map((questionnaire, index) => (
+            <ListItem key={questionnaire.id} disablePadding>
+              <ListItemButton onClick={() => {
+                setCurrentQuestionnaireIndex(index);
+                setCurrentQuestionIndex(0); // Reset to the first question
+              }}>
+                <ListItemText primary={questionnaire.title} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
 
-      {pendingQuestionnaires.length > 0 ? (
-        <Box>
-          <Typography variant="h5" gutterBottom>
-            {pendingQuestionnaires[currentQuestionnaireIndex].title}
-          </Typography>
-          <Typography variant="h6" gutterBottom>
-            {pendingQuestionnaires[currentQuestionnaireIndex].questions[currentQuestionIndex].text}
-          </Typography>
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder="Your Answer"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmitAnswer}
-            sx={{ mb: 2 }}
-          >
-            Submit Answer
-          </Button>
-        </Box>
-      ) : (
-        <Typography variant="h6">
-          No Pending Questionnaires
-        </Typography>
-      )}
+      {/* Main Content */}
+      <Box sx={{ flexGrow: 1, ml: 3 }}>
+        <IconButton
+          aria-controls={open ? 'settings-menu' : undefined}
+          aria-haspopup="true"
+          onClick={handleSettingsClick}
+          color="inherit"
+          sx={{ position: 'absolute', top: 0, right: 0 }}
+        >
+          <SettingsIcon />
+        </IconButton>
+        <Menu
+          id="settings-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={handleChangePassword}>Change Password</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
+        </Menu>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-      >
-        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+        {pendingQuestionnaires.length > 0 ? (
+          <Box>
+            <Typography variant="h5" gutterBottom>
+              {pendingQuestionnaires[currentQuestionnaireIndex].title}
+            </Typography>
+            <Typography variant="h6" gutterBottom>
+              {pendingQuestionnaires[currentQuestionnaireIndex].questions[currentQuestionIndex].text}
+            </Typography>
+            <TextField
+              fullWidth
+              variant="outlined"
+              placeholder="Your Answer"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmitAnswer}
+              sx={{ mb: 2 }}
+            >
+              Submit Answer
+            </Button>
+          </Box>
+        ) : (
+          <Typography variant="h6">
+            No Pending Questionnaires
+          </Typography>
+        )}
+
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Box>
     </Container>
   );
 };
 
 export default UserPage;
+ 
