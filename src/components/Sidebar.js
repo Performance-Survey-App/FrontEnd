@@ -164,18 +164,19 @@ const Sidebar = () => {
           </NavLink>
         </li>
         <li className="mb-2">
+          <NavLink to="./department-management" className="flex items-center p-2 hover:bg-green-600 hover:text-white  rounded">
+            <span className="material-icons mr-3 text-2xl">apartment</span>
+            Manage Department
+          </NavLink>
+        </li>
+        <li className="mb-2">
         
           <NavLink to="./user-management" className="flex items-center p-2 hover:bg-green-600 hover:text-white rounded">
             <span className="material-icons mr-3 text-2xl">people</span>
             Manage Users
           </NavLink>
         </li>
-        <li className="mb-2">
-          <NavLink to="./department-management" className="flex items-center p-2 hover:bg-green-600 hover:text-white  rounded">
-            <span className="material-icons mr-3 text-2xl">apartment</span>
-            Manage Department
-          </NavLink>
-        </li>
+       
         <li className="mb-2">
           <NavLink to="./question-management" className="flex items-center p-2 hover:bg-green-600 hover:text-white  rounded">
             <span className="material-icons mr-3 text-2xl">quiz</span>
