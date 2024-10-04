@@ -129,6 +129,8 @@ import { NavLink,useNavigate } from 'react-router-dom';
 import logo from '../images/logo.jpg';
 import { MdHome } from "react-icons/md";
 import { FaLock } from "react-icons/fa6";
+import { FaUserGroup } from "react-icons/fa6";
+import { FaWarehouse } from "react-icons/fa";
 import { MdLogout } from "react-icons/md";
 
 import { CiSettings } from "react-icons/ci";
@@ -165,33 +167,38 @@ const Sidebar = () => {
         </li>
         <li className="mb-2">
           <NavLink to="./department-management" className="flex items-center p-2 hover:bg-green-600 hover:text-white  rounded">
-            <span className="material-icons mr-3 text-2xl">apartment</span>
+            {/* <span className="material-icons mr-3 text-2xl">apartment</span> */}
+            <FaWarehouse className="mr-3 text-2xl"  />
             Manage Department
           </NavLink>
         </li>
         <li className="mb-2">
         
           <NavLink to="./user-management" className="flex items-center p-2 hover:bg-green-600 hover:text-white rounded">
-            <span className="material-icons mr-3 text-2xl">people</span>
+            {/* <span className="material-icons mr-3 text-2xl">people</span> */}
+            <FaUserGroup  className="mr-3 text-2xl" />
             Manage Users
           </NavLink>
         </li>
        
         <li className="mb-2">
           <NavLink to="./question-management" className="flex items-center p-2 hover:bg-green-600 hover:text-white  rounded">
-            <span className="material-icons mr-3 text-2xl">quiz</span>
+            {/* <span className="material-icons mr-3 text-2xl">quiz</span> */}
+            <FaWarehouse />
             Manage Questions
           </NavLink>
         </li>
         <li className="mb-2">
           <NavLink to="./assign-questions" className="flex items-center p-2 hover:bg-green-600 hover:text-white  rounded">
-            <span className="material-icons mr-3 text-2xl">assignment</span>
+            {/* <span className="material-icons mr-3 text-2xl">assignment</span> */}
+            <FaWarehouse />
             Assign Questions
           </NavLink>
         </li>
         <li className="mb-2">
           <NavLink to="./responses" className="flex items-center p-2 hover:bg-green-600 hover:text-white  rounded">
-            <span className="material-icons mr-3 text-2xl">assessment</span>
+            {/* <span className="material-icons mr-3 text-2xl">assessment</span> */}
+            <FaWarehouse />
             Responses
           </NavLink>
         </li>
