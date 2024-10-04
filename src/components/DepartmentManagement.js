@@ -3,19 +3,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// // Base API URL
-// const backend_URL = process.env.REACT_APP_API_URL;
-// console.log(backend_URL,"*********************************");
+
 const backend_URL = process.env.REACT_APP_BACKEND_BASE_URL;
 
 const DepartmentPage = () => {
   const [departments, setDepartments] = useState([]);
   const [departmentName, setDepartmentName] = useState('');
-  const [editingDepartment, setEditingDepartment] = useState(null); // For updating department
+  const [editingDepartment, setEditingDepartment] = useState(null); 
   const [showForm, setShowForm] = useState(false);
-  const [showActions, setShowActions] = useState(null); // Track which department's actions are visible
+  const [showActions, setShowActions] = useState(null); 
 
-  // Fetch all departments on component mount
+
   useEffect(() => {
     fetchDepartments();
 }, []);
@@ -29,8 +27,7 @@ const fetchDepartments = async () => {
     }
 };
 
-  // Add department handler
-  // const backend_URL = process.env.REACT_APP_BACKEND_BASE_URL;
+  
 
   const handleAddDepartment = async (e) => {
       e.preventDefault();
