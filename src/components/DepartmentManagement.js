@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Typography, Button, TextField, List, ListItem, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, Snackbar, Alert } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DeptService from '../services/department.service';
 
 const DepartmentManagement = () => {
   const [departments, setDepartments] = useState([]);
   const [newDepartment, setNewDepartment] = useState('');
-  const [updateDepartment, setUpdateDepartment] = useState({ id: '', name: '' });
+  const [updateDepartment, setUpdateDepartment] = useState({ departmentId: '', departmentName: '' });
   const [isCreateDepartmentOpen, setIsCreateDepartmentOpen] = useState(false);
   const [isUpdateDepartmentOpen, setIsUpdateDepartmentOpen] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -18,52 +19,124 @@ const DepartmentManagement = () => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
-  const createDepartment = () => {
-    setDepartments([...departments, { id: Date.now(), name: newDepartment }]);
-    setNewDepartment('');
-    setIsCreateDepartmentOpen(false);
-    setSnackbarMessage('Department created successfully!');
-    setSnackbarOpen(true);
+  const deptService = new DeptService();
+
+  useEffect(() => {
+    fetchDepartments();
+}, []);
+
+const fetchDepartments = async () => {
+    try {
+        const response = await deptService.fetchDepartments();
+        console.log("API Response:", response);
+
+        // Check if the response data is directly an array or contains a $values array
+        if (Array.isArray(response.data)) {
+            setDepartments(response.data);
+        } else if (Array.isArray(response.data.$values)) {
+            setDepartments(response.data.$values);
+        } else {
+            console.error("Unexpected response format, expected an array:", response.data);
+            setDepartments([]);
+        }
+    } catch (error) {
+        console.error("Error fetching departments:", error);
+        setDepartments([]);
+        setSnackbarMessage('Error fetching departments');
+        setSnackbarOpen(true);
+    }
+};
+
+
+
+  const createDepartment = async () => {
+    try {
+        const response = await deptService.createDepartment({ departmentName: newDepartment });
+        // Extract the departmentName and $id from the response
+        const newDept = {
+            $id: response.data.$id,
+            departmentName: response.data.departmentName,
+        };
+        // Update the departments state
+        setDepartments([...departments, newDept]);
+        setNewDepartment(''); // Clear input
+        setIsCreateDepartmentOpen(false);
+        setSnackbarMessage('Department created successfully!');
+        setSnackbarOpen(true);
+        
+    fetchDepartments();
+    } catch (error) {
+        console.error("Error creating department:", error);
+        setSnackbarMessage(`Error creating department: ${error.response?.data?.message || error.message}`);
+        setSnackbarOpen(true);
+    }
   };
 
-  const updateDepartmentDetails = () => {
-    const updatedDepartments = departments.map(department =>
-      department.id === updateDepartment.id ? { ...department, name: updateDepartment.name } : department
-    );
-    setDepartments(updatedDepartments);
-    setUpdateDepartment({ id: '', name: '' });
-    setIsUpdateDepartmentOpen(false);
-    setSnackbarMessage('Department updated successfully!');
-    setSnackbarOpen(true);
-  };
+  const updateDepartmentDetails = async () => {
+    try {
+      console.log("department.id:", updateDepartment)
 
-  const confirmDeleteDepartment = id => {
-    setDepartmentToDelete(id);
+      await deptService.updateDepartmentDetails(
+        
+        { departmentName: updateDepartment.departmentName },
+        updateDepartment.departmentId
+      );
+  
+      const updatedDepartments = departments.map(department =>
+        department.departmentId === updateDepartment.departmentId
+          ? { ...department, departmentName: updateDepartment.departmentName }
+          : department
+      );
+      setDepartments(updatedDepartments);
+      setUpdateDepartment({ departmentId: '', departmentName: '' });
+      setIsUpdateDepartmentOpen(false);
+      setSnackbarMessage('Department updated successfully!');
+      setSnackbarOpen(true);
+      fetchDepartments();
+    } catch (error) {
+      console.error("Error updating department:", error);
+      setSnackbarMessage(`Error updating department: ${error.response?.data?.message || error.message}`);
+      setSnackbarOpen(true);
+    }
+  };
+  
+  const confirmDeleteDepartment = (departmentId) => {
+    setDepartmentToDelete(departmentId);
     setIsDeleteConfirmOpen(true);
   };
 
-  const deleteDepartment = () => {
-    const filteredDepartments = departments.filter(department => department.id !== departmentToDelete);
-    setDepartments(filteredDepartments);
-    setIsDeleteConfirmOpen(false);
-    setDepartmentToDelete(null);
-    setSnackbarMessage('Department deleted successfully!');
-    setSnackbarOpen(true);
-  };
+  const deleteDepartment = async () => {
+    try {
+        await deptService.deleteDepartment(departmentToDelete);
+        
+        setIsDeleteConfirmOpen(false);
+        setDepartmentToDelete(null);
+        setSnackbarMessage('Department deleted successfully!');
+        setSnackbarOpen(true);
+        fetchDepartments();
+    } catch (error) {
+        console.error("Error deleting department:", error);
+        setSnackbarMessage(`Error deleting department: ${error.response?.data?.message || error.message}`);
+        setSnackbarOpen(true);
+    }
+};
+
 
   const filteredDepartments = departments.filter(department =>
-    department.name.toLowerCase().includes(searchTerm.toLowerCase())
+    
+    department && department.departmentName && department.departmentName.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
+ console.log("this comment",filteredDepartments)
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h4">Departments</Typography>
+    <Box className="p-6 bg-gray-50 rounded-lg shadow-md">
+      <Box className="flex justify-between mb-4">
+        <Typography variant="h4" className="text-gray-800">Departments</Typography>
         <Button 
           variant="contained" 
           color="primary" 
           startIcon={<AddIcon />} 
           onClick={() => setIsCreateDepartmentOpen(true)}
+          className="bg-green-500 text-white hover:bg-blue-600 transition"
         >
           Create Department
         </Button>
@@ -99,27 +172,18 @@ const DepartmentManagement = () => {
             label="Department Name"
             type="text"
             fullWidth
-            value={updateDepartment.name}
-            onChange={(e) => setUpdateDepartment({ ...updateDepartment, name: e.target.value })}
+            value={updateDepartment.departmentName}
+            onChange={(e) => setUpdateDepartment({ ...updateDepartment, departmentName: e.target.value })}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsUpdateDepartmentOpen(false)}>Cancel</Button>
           <Button onClick={updateDepartmentDetails} color="primary">Save</Button>
-          <Button 
-            onClick={() => confirmDeleteDepartment(updateDepartment.id)} 
-            color="error"
-          >
-            Delete
-          </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog
-        open={isDeleteConfirmOpen}
-        onClose={() => setIsDeleteConfirmOpen(false)}
-      >
+      <Dialog open={isDeleteConfirmOpen} onClose={() => setIsDeleteConfirmOpen(false)}>
         <DialogTitle>{"Confirm Delete"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -127,12 +191,8 @@ const DepartmentManagement = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsDeleteConfirmOpen(false)} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={deleteDepartment} color="secondary">
-            Delete
-          </Button>
+          <Button onClick={() => setIsDeleteConfirmOpen(false)} color="primary">Cancel</Button>
+          <Button onClick={deleteDepartment} color="secondary">Delete</Button>
         </DialogActions>
       </Dialog>
 
@@ -145,40 +205,46 @@ const DepartmentManagement = () => {
         variant="outlined"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        className="mb-4"
       />
 
       {/* Department List */}
-      <List>
-        {filteredDepartments.map(department => (
-          <ListItem
-            key={department.id}
-            secondaryAction={
-              <Box sx={{ display: 'flex' }}>
-                <IconButton
-                  edge="end"
-                  aria-label="edit"
-                  onClick={() => {
-                    setUpdateDepartment(department);
-                    setIsUpdateDepartmentOpen(true);
-                  }}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                  onClick={() => confirmDeleteDepartment(department.id)}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Box>
-            }
-          >
-            <Typography variant="body1" sx={{ flexGrow: 1 }}>
-              {department.name}
-            </Typography>
-          </ListItem>
-        ))}
+      <List className="bg-white rounded-lg shadow">
+        {filteredDepartments.length > 0 ? (
+          filteredDepartments.map(department => (
+            <ListItem
+              key={department.departmentId}
+              className="border-b hover:bg-gray-100 transition"
+              secondaryAction={
+                <Box className="flex">
+                  <IconButton
+                    edge="end"
+                    aria-label="edit"
+                    onClick={() => {
+                      setUpdateDepartment(department);
+                      setIsUpdateDepartmentOpen(true);
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
+                    aria-label="delete"
+                    onClick={() => confirmDeleteDepartment(department.departmentId)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
+              }
+            >
+              <Typography variant="body1" className="text-gray-700">
+                {department.departmentName}
+              </Typography>
+            </ListItem>
+          ))
+        ) : (
+          <Typography className="p-4 text-gray-500">No departments found.</Typography>
+        )}
       </List>
 
       {/* Snackbar for notifications */}
